@@ -18,7 +18,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     keyboard = [[InlineKeyboardButton("✅ I have subscribed", callback_data='is_subscribed')]]
     
-    # ប្រើ Link រូបភាពឱ្យបានត្រឹមត្រូវ
     await update.message.reply_photo(
         photo="https://telegra.ph/file/0e48119097723919f20c1.jpg", 
         caption=welcome_text,
@@ -51,7 +50,6 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             caption="🏛️ **Brokers that I use**",
             reply_markup=InlineKeyboardMarkup(broker_keyboard),
             parse_mode='Markdown'
-
         )
 
 if __name__ == '__main__':
@@ -59,3 +57,4 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(handle_callback))
     app.run_polling()
+    
