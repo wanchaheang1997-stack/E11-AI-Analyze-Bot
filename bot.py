@@ -7,7 +7,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandle
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # ទាញយក Token ពី Environment Variable
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = "8536745408:AAHuF15lZRqXWoslIHZviXLLzZMJvkTfFaA"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_name = update.effective_user.first_name
