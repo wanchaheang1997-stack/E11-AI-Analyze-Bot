@@ -10,31 +10,43 @@ app_web = Flask('')
 def home(): return "Bot is running!"
 def run_web(): app_web.run(host='0.0.0.0', port=8080)
 
-# --- ផ្នែកកូដ Bot ផ្ដល់ព័ត៌មាន ---
+# --- ផ្នែកកូដ Bot ---
 TOKEN = os.getenv("BOT_TOKEN")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_name = update.effective_user.first_name
+    
+    # បង្កើតប៊ូតុងដែលភ្ជាប់ទៅកាន់ Group និង Channel របស់បងពិតប្រាកដ
     keyboard = [
-        [InlineKeyboardButton("📊 តារាងតម្លៃមាស", callback_data='gold')],
-        [InlineKeyboardButton("📢 ចូលរួម Channel", url="https://t.me/E11Lab_Official")]
+        [
+            InlineKeyboardButton("📢 ចូលរួម Channel", url="https://t.me/E11_Lab_Official")
+        ],
+        [
+            InlineKeyboardButton("👥 ចូលរួម Group Community", url="https://t.me/E11LabCommunity")
+        ],
+        [
+            InlineKeyboardButton("📞 ទាក់ទង Admin", url="https://t.me/wanchaheang")
+        ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("សួស្តីបង! ស្វាគមន៍មកកាន់ E11 Lab Assistant។ សូមជ្រើសរើស៖", reply_markup=reply_markup)
-
-async def handle_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    if query.data == 'gold':
-        await query.edit_message_text("📈 តម្លៃមាសថ្ងៃនេះ៖ [កំពុង Update] \nចុច /start ដើម្បីទៅមេនុយវិញ។")
+    
+    welcome_text = (
+        f"សួស្តីបង {user_name}! 🙏 ស្វាគមន៍មកកាន់ E11 Lab Assistant។\n"
+        "សូមជ្រើសរើសព័ត៌មានដែលបងចង់បានខាងក្រោម៖"
+    )
+    
+    await update.message.reply_text(text=welcome_text, reply_markup=reply_markup)
 
 if __name__ == '__main__':
-    # បើក Flask ក្នុង Thread ផ្សេង
+    # បើក Flask ដើម្បីការពារ Render បិទ Bot
     threading.Thread(target=run_web).start()
     
-    # បញ្ឆេះ Bot
-    if TOKEN:
+    if not TOKEN:
+        print("Error: BOT_TOKEN is missing in Environment Variables!")
+    else:
         app = ApplicationBuilder().token(TOKEN).build()
         app.add_handler(CommandHandler("start", start))
-        app.add_handler(CallbackQueryHandler(handle_button))
+        
+        print("Bot is starting with your Group & Channel links...")
         app.run_polling()
         
