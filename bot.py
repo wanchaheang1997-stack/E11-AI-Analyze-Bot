@@ -3,13 +3,10 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# កំណត់ការបង្ហាញ Error
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
-# ទាញយក Token ពី Render
 TOKEN = os.getenv("BOT_TOKEN")
 
-# Link ផ្លូវការរបស់បង
+# Links ផ្លូវការ
 EXNESS_LINK = "https://one.exnessonelink.com/a/c_2n7hv0b8qh"
 GTCFX_LINK = "https://web.mygtc.app/login/register?ref=130059052"
 YOUTUBE_LINK = "https://youtube.com/@e11lab"
@@ -17,9 +14,7 @@ LIBRARY_LINK = "https://e11lablibrary.blogspot.com"
 TELEGRAM_OFFICIAL = "https://t.me/E11_Lab_Official"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # ទាញយកឈ្មោះអ្នកប្រើប្រាស់ (ក្នុងរូបភាពចាស់បងប្រើ Wanthea)
     user_name = update.effective_user.first_name
-    
     welcome_text = (
         f"Welcome to E11 Lab 🧪, {user_name}!\n\n"
         "🌟 **E11 Lab Introduction & Benefits**\n"
@@ -29,10 +24,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "តោះ Subscribe ដើម្បីក្លាយជាផ្នែកមួយរបស់ពួកយើង!\n"
         "Let's subscribe to become part of our community!"
     )
-    
-    # ប៊ូតុងបញ្ជាក់ការ Subscribe តែមួយគត់ (លុបអាជម្រើស "មិនទាន់បាន Join" ចេញ)
     keyboard = [[InlineKeyboardButton("✅ I have subscribed", callback_data='is_subscribed')]]
-    
     await update.message.reply_photo(
         photo="https://telegra.ph/file/0e48119097723919f20c1.jpg", 
         caption=welcome_text,
@@ -43,9 +35,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-    
     if query.data == 'is_subscribed':
-        # ប្តូរឈ្មោះប៊ូតុងជាភាសាអង់គ្លេស និងដាក់ Link ថ្មីរបស់បង
         access_keyboard = [
             [InlineKeyboardButton("🏛️ Brokers that I use", callback_data='show_brokers')],
             [InlineKeyboardButton("📺 Video Lessons", url=YOUTUBE_LINK)],
@@ -56,9 +46,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             caption="Access Granted! ✅\n\nឥឡូវនេះបងអាចប្រើប្រាស់មុខងារទាំងអស់ខាងក្រោម៖",
             reply_markup=InlineKeyboardMarkup(access_keyboard)
         )
-        
     elif query.data == 'show_brokers':
-        # បង្ហាញ Link Broker របស់បង
         broker_keyboard = [
             [InlineKeyboardButton("🟡 Exness", url=EXNESS_LINK)],
             [InlineKeyboardButton("🔵 GTCfx", url=GTCFX_LINK)],
@@ -72,8 +60,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 if __name__ == '__main__':
     app = ApplicationBuilder().token(TOKEN).build()
-    
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(handle_callback))
-    
     app.run_polling()
+
